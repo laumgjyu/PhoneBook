@@ -26,21 +26,12 @@ import java.util.ResourceBundle;
  * Created by lmy on 2018/2/8.
  */
 @Controller
-public class LoginController extends BaseController implements Initializable {
+public class MainController extends BaseController implements Initializable {
 
     @Resource
     private LoginService loginService;
 
-    @FXML
-    private Button loginButton;
-
-    @FXML
-    private TextField username;
-
-    @FXML
-    private PasswordField password;
-
-    public LoginController(StartupConfig config) {
+    public MainController(StartupConfig config) {
         super(config);
     }
 
@@ -50,17 +41,20 @@ public class LoginController extends BaseController implements Initializable {
 
     }
 
+    @FXML
     public void login(ActionEvent event) {
 
-        if (StringUtils.isBlank(username.getText()) || StringUtils.isBlank(password.getText())) {
-            Alert warning = new Alert(Alert.AlertType.ERROR);
-            warning.setTitle("警告");
-            warning.setResizable(false);
-            warning.setHeaderText("用户名或密码不能为空！");
-            warning.setContentText("请重新输入！");
-            warning.show();
-        } else {
-            loginService.login(username.getText(), password.getText());
-        }
+//        if (StringUtils.isBlank(username.getText()) || StringUtils.isBlank(password.getText())) {
+//            Alert warning = new Alert(Alert.AlertType.ERROR);
+//            warning.setTitle("警告");
+//            warning.setResizable(false);
+//            warning.setHeaderText("用户名或密码不能为空！");
+//            warning.setContentText("请重新输入！");
+//            warning.show();
+//        } else {
+//            loginService.login(username.getText(), password.getText());
+//        }
+
+        System.out.println("dianjile");
     }
 }

@@ -1,11 +1,11 @@
 package com.mm.config;
 
 import com.mm.controller.BaseController;
-import com.mm.controller.LoginController;
+import com.mm.controller.MainController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.context.annotation.Bean;
@@ -25,22 +25,27 @@ import java.util.Observer;
 @CommonsLog
 public class StartupConfig implements Observer {
 
-    private final String ON_START = "/view/Login.fxml";
-    private final String PRIMARY_TITLE = "出入货记录系统";
+    private final String ON_START = "/view/Main.fxml";
+    private final String PRIMARY_TITLE = "电话簿";
 
-    private StackPane root;
+    private AnchorPane root;
     private Stage stage;
     private Scene scene;
 
     public void startApp() {
-        root = new StackPane();
+        root = new AnchorPane();
+
         scene = new Scene(root);
 
         stage.setTitle(PRIMARY_TITLE);
         stage.setScene(scene);
-        stage.setResizable(true);
+        stage.setResizable(false);
+        stage.setHeight(768);
+        stage.setWidth(1024);
+
         stage.show();
     }
+
 
     private void setNode(Node node) {
         root.getChildren().setAll(node);
@@ -85,7 +90,7 @@ public class StartupConfig implements Observer {
 
     @Bean
     @Scope("prototype")
-    LoginController loginController() {
-        return new LoginController(this);
+    MainController loginController() {
+        return new MainController(this);
     }
 }

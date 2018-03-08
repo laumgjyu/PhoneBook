@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.TextFlow?>
+
+<BorderPane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mm.controller.MainController">
+   <bottom>
+      <TextFlow fx:id="console" prefHeight="149.0" prefWidth="600.0" BorderPane.alignment="BOTTOM_LEFT">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+         <children>
+            <TextArea fx:id="consoleText" prefHeight="154.0" prefWidth="1022.0" promptText="控制台输出信息" text="这里打印日志等系统提示" wrapText="true">
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </TextArea>
+         </children>
+      </TextFlow>
+   </bottom>
+</BorderPane>

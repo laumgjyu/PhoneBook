@@ -1,6 +1,6 @@
 package com.mm.config;
 
-import com.mm.controller.LoginController;
+import com.mm.controller.MainController;
 import com.mm.service.LoginService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * Created by lmy on 2018/2/9.
  */
 @Configuration
-@ComponentScan(basePackageClasses = {LoginService.class, LoginController.class})
+@ComponentScan(basePackageClasses = {LoginService.class, MainController.class})
 @EnableTransactionManagement
 @Import({JpaConfig.class, StartupConfig.class})
 public class SpringConfig {

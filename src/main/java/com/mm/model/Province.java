@@ -3,23 +3,17 @@ package com.mm.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
-/**
- * Created by lmy on 2018/2/9.
- */
 @Entity
 @Data
-public class User {
+public class Province {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private String name;
 
-    private Integer phoneNumber;
-
-    @ManyToOne
-    private Province province;
-
-    private String detail;
+    @OneToMany(mappedBy = "province")
+    private Set<User> users;
 }
