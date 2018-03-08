@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 
 /**
  * Created by lmy on 2018/2/13.
@@ -25,8 +26,8 @@ import java.util.Observer;
 @CommonsLog
 public class StartupConfig implements Observer {
 
-    private final String ON_START = "/view/Main.fxml";
-    private final String PRIMARY_TITLE = "电话簿";
+    private static final String ON_START_FILE = "/view/Main.fxml";
+    private static final String PRIMARY_TITLE = "电话簿";
 
     private AnchorPane root;
     private Stage stage;
@@ -40,8 +41,8 @@ public class StartupConfig implements Observer {
         stage.setTitle(PRIMARY_TITLE);
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setHeight(768);
-        stage.setWidth(1024);
+        stage.setHeight(800);
+        stage.setWidth(1026);
 
         stage.show();
     }
@@ -71,16 +72,16 @@ public class StartupConfig implements Observer {
         }
     }
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.stage = primaryStage;
-    }
-
     public Stage getPrimaryStage() {
         return stage;
     }
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.stage = primaryStage;
+    }
+
     public void startup() {
-        setNode(getNode(loginController(), getClass().getResource(ON_START)));
+        setNode(getNode(loginController(), getClass().getResource(ON_START_FILE)));
     }
 
     @Override
