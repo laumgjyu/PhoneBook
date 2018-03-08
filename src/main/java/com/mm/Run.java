@@ -12,7 +12,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * Created by lmy on 2018/2/8.
  */
 
-public class Main extends Application {
+public class Run extends Application {
 
     @Override
     public void start(Stage primaryStage) {

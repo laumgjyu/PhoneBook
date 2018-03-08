@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.TextFlow?>
 
@@ -17,7 +27,7 @@
                <padding>
                   <Insets left="10.0" />
                </padding></Label>
-                <TextArea fx:id="consoleText" disable="true" prefHeight="154.0" prefWidth="1022.0" wrapText="true">
+                <TextArea fx:id="consoleContent" disable="true" prefHeight="154.0" prefWidth="1022.0" wrapText="true">
                     <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </padding>
@@ -25,4 +35,54 @@
             </children>
         </TextFlow>
     </bottom>
+   <top>
+      <TabPane prefHeight="99.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab fx:id="addTab" text="添加">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="inputName" layoutX="49.0" layoutY="19.0" promptText="请输入姓名" />
+                        <TextField fx:id="inputNumber" layoutX="260.0" layoutY="19.0" promptText="请输入电话号码" />
+                        <SplitMenuButton fx:id="inputProvince" layoutX="477.0" layoutY="19.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="133.0" text="选择你的省份">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Action 1" />
+                            <MenuItem mnemonicParsing="false" text="Action 2" />
+                          </items>
+                        </SplitMenuButton>
+                        <TextField fx:id="inputAddress" layoutX="656.0" layoutY="19.0" promptText="请输入详细地址" />
+                        <Button fx:id="addButton" layoutX="891.0" layoutY="19.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="65.0" text="新增" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="searchTab" text="搜索">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="search" layoutX="312.0" layoutY="19.0" prefHeight="28.0" prefWidth="261.0" promptText="请输入您要搜索的内容，姓名或电话号码" />
+                        <Button fx:id="searchButton" layoutX="610.0" layoutY="19.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="100.0" text="搜索" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </top>
+   <center>
+      <TableView fx:id="table" editable="true" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="nameColumn" editable="false" prefWidth="107.0" text="姓名" />
+          <TableColumn fx:id="numberColumn" editable="false" prefWidth="166.0" text="电话" />
+            <TableColumn fx:id="provinceColumn" editable="false" prefWidth="103.0" text="居住省份" />
+            <TableColumn fx:id="addressColumn" editable="false" prefWidth="303.0" text="详细地址" />
+            <TableColumn fx:id="timeColumn" editable="false" minWidth="0.0" prefWidth="135.0" text="添加时间" />
+            <TableColumn fx:id="deleteColumn" editable="false" prefWidth="100.0" resizable="false" sortable="false" text="删除" />
+            <TableColumn fx:id="modifyColumn" editable="false" prefWidth="92.0" resizable="false" sortable="false" text="修改" />
+        </columns>
+      </TableView>
+   </center>
+   <right>
+      <ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>

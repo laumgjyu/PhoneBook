@@ -16,4 +16,9 @@ public class Province {
 
     @OneToMany(mappedBy = "province")
     private Set<User> users;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
