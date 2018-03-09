@@ -4,8 +4,9 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/java/com/mm/config/JpaConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/mm/config/SpringConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/lmy/config/JpaConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/lmy/config/SpringConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/lmy/config/StartupConfig.java</file>
         </fileset>
       </configuration>
     </facet>

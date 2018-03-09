@@ -3,6 +3,7 @@ package com.lmy.controller;
 import com.lmy.config.StartupConfig;
 import com.lmy.model.Province;
 import com.lmy.model.User;
+import com.lmy.service.ProvinceService;
 import com.lmy.service.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.Resource;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
@@ -29,6 +31,9 @@ public class MainController extends BaseController implements Initializable {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private ProvinceService provinceService;
 
     @FXML
     private TextArea consoleContent;
@@ -147,11 +152,12 @@ public class MainController extends BaseController implements Initializable {
     private void initialSplitMenuButton() {
         this.inputProvince.getItems().clear();
 
-        for (int i = 0; i < 10; i++) {
-            //TODO 获取省份信息
+        List<Province> provinces = provinceService.getAllProvince();
+
+        for (int i = 0; i < provinces.size(); i++) {
 
             MenuItem item = new MenuItem();
-            item.setText(String.valueOf(i));
+            item.setText(provinces.get(i).getName());
             item.setOnAction((event -> this.inputProvince.setText(item.getText())));
             this.inputProvince.getItems().add(item);
         }
@@ -204,8 +210,8 @@ public class MainController extends BaseController implements Initializable {
 
         ObservableList<User> list = FXCollections.observableArrayList(user1, user2, user3, user4, user5, user6,
                 user7, user8, user9, user10, user11, user12, user1, user2, user3, user4, user5, user6);
-        return list;
-//        return FXCollections.observableArrayList(userService.getAllUsers());
+//        return list;
+        return FXCollections.observableArrayList(userService.getAllUsers());
     }
 
     private void showTable(ObservableList<User> users) {

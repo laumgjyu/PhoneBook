@@ -7,35 +7,10 @@ public class HashMap<K, V> {
     static final int MAXIMUM_CAPACITY = 1 << 30;  //数组的最大容量
 
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
-
-    Node<K, V>[] table;
-
-    int size; //Map的大小
-
     final float loadFactor; //负载因子,负载因子小的表冲突的可能性小，插入和查找的速度也相对较快（但会减慢使用迭代器进行遍历的过程）。HashMap和HashSet都具有允许你指定负载因子的构造器，表示当负载情况达到负载因子的水平时，容器将自动增加容量。实现方法是使容量加倍，并将现有对象分配到新的桶位集中。
-
+    Node<K, V>[] table;
+    int size; //Map的大小
     int threshold; //调整大小时的下一个大小值
-
-    static final int hash(Object key) {
-        int h;
-        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
-    }
-
-    /**
-     * 找出大于给定的值cap的最小的2的次方数
-     *
-     * @param cap
-     * @return
-     */
-    static final int tableSizeFor(int cap) {
-        int n = cap - 1;
-        n |= n >>> 1;
-        n |= n >>> 2;
-        n |= n >>> 4;
-        n |= n >>> 8;
-        n |= n >>> 16;
-        return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
-    }
 
     public HashMap(int initialCapacity, float loadFactor) {
         if (initialCapacity < 0)
@@ -56,6 +31,27 @@ public class HashMap<K, V> {
 
     public HashMap() {
         this.loadFactor = DEFAULT_LOAD_FACTOR;
+    }
+
+    static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    /**
+     * 找出大于给定的值cap的最小的2的次方数
+     *
+     * @param cap
+     * @return
+     */
+    static final int tableSizeFor(int cap) {
+        int n = cap - 1;
+        n |= n >>> 1;
+        n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+        return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
     }
 
     public V put(K key, V value) {
@@ -175,13 +171,11 @@ public class HashMap<K, V> {
         return (e = getNode(hash(key), key)) == null ? null : e.value;
     }
 
-    /**
-     * Implements Map.get and related methods
-     *
-     * @param hash hash for key
-     * @param key  the key
-     * @return the node, or null if none
-     */
+    public Node<K, V> getNode(Object key) {
+        Node<K, V> e;
+        return (e = getNode(hash(key), key)) == null ? null : e;
+    }
+
     final Node<K, V> getNode(int hash, Object key) {
         Node<K, V>[] tab;
         Node<K, V> first, e;
@@ -190,13 +184,18 @@ public class HashMap<K, V> {
         if ((tab = table) != null && (n = tab.length) > 0 &&
                 (first = tab[(n - 1) & hash]) != null) {
             if (first.hash == hash && // always check first node
-                    ((k = first.key) == key || (key != null && key.equals(k))))
+                    ((k = first.key) == key || (key != null && key.equals(k)))) {
+                first.searchLength = 1;  //记录查找长度
                 return first;
+            }
             if ((e = first.next) != null) {
+                e.searchLength = 1;
                 do {
+                    e.searchLength++;
                     if (e.hash == hash &&
-                            ((k = e.key) == key || (key != null && key.equals(k))))
+                            ((k = e.key) == key || (key != null && key.equals(k)))) {
                         return e;
+                    }
                 } while ((e = e.next) != null);
             }
         }
@@ -213,5 +212,63 @@ public class HashMap<K, V> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public V remove(Object key) {
+        Node<K, V> e;
+        return (e = removeNode(hash(key), key, null, true)) == null ?
+                null : e.value;
+    }
+
+    /**
+     * @param hash
+     * @param key
+     * @param value
+     * @param matchValue 当matchValue为true的时候，key相同并且value相同的时候才会删除
+     * @return
+     */
+    final Node<K, V> removeNode(int hash, Object key, Object value, boolean matchValue) {
+        Node<K, V>[] tab;
+        Node<K, V> p;
+        int n, index;
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+                (p = tab[index = (n - 1) & hash]) != null) {
+            Node<K, V> node = null, e;
+            K k;
+            V v;
+            if (p.hash == hash &&
+                    ((k = p.key) == key || (key != null && key.equals(k))))
+                node = p;
+            else if ((e = p.next) != null) {
+                do {
+                    if (e.hash == hash &&
+                            ((k = e.key) == key ||
+                                    (key != null && key.equals(k)))) {
+                        node = e;
+                        break;
+                    }
+                    p = e;
+                } while ((e = e.next) != null);
+            }
+            if (node != null && (!matchValue || (v = node.value) == value ||
+                    (value != null && value.equals(v)))) {
+                if (node == p)
+                    tab[index] = node.next;
+                else
+                    p.next = node.next;
+                --size;
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public void clear() {
+        Node<K, V>[] tab;
+        if ((tab = table) != null && size > 0) {
+            size = 0;
+            for (int i = 0; i < tab.length; ++i)
+                tab[i] = null;
+        }
     }
 }

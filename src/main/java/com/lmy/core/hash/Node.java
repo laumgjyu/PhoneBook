@@ -9,6 +9,8 @@ public class Node<K, V> {
 
     V value;
 
+    int searchLength; //查找长度
+
     Node<K, V> next;
 
     public Node(int hash, K key, V value, Node<K, V> next) {
@@ -16,6 +18,7 @@ public class Node<K, V> {
         this.key = key;
         this.value = value;
         this.next = next;
+        this.searchLength = 0;
     }
 
     public Node(int hash, K key, V value) {
