@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
@@ -131,8 +132,6 @@ public class MainController extends BaseController implements Initializable {
     @FXML
     public void addUser() {
 
-        //TODO 添加用户
-
         if (checkAddParams()) {
             String name = inputName.getText();
             String phoneNumber = inputNumber.getText();
@@ -142,11 +141,20 @@ public class MainController extends BaseController implements Initializable {
             User user = new User(name, phoneNumber, new Province(province), address);
             this.table.getItems().add(user);
 
+            userService.addUser(user);
+
             Alert success = new Alert(Alert.AlertType.INFORMATION, "添加成功！");
             success.show();
+            clearInput();
         }
 
+    }
 
+    private void clearInput() {
+        inputName.setText("");
+        inputNumber.setText("");
+        inputAddress.setText("");
+        inputProvince.setText("");
     }
 
     private void initialSplitMenuButton() {
@@ -166,7 +174,7 @@ public class MainController extends BaseController implements Initializable {
     private void initialAddTab() {
         addTab.setOnSelectionChanged((event -> {
             if (addTab.isSelected()) {
-                this.showTable(getUsers());
+                this.table.setItems(getUsers());
             } else {
                 this.table.getItems().clear();
             }
@@ -190,27 +198,18 @@ public class MainController extends BaseController implements Initializable {
         });
     }
 
+    private boolean confirmDelete() {
+        Alert confirm = new Alert(Alert.AlertType.WARNING, "确定删除该条记录吗？", ButtonType.YES, ButtonType.CANCEL);
+        Optional<ButtonType> buttonType = confirm.showAndWait();
+        if (buttonType.get().getButtonData().equals(ButtonBar.ButtonData.YES)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private ObservableList<User> getUsers() {
 
-        //TODO 获取用户信息
-
-        User user1 = new User("user1", "1", new Province("a"), "中华人名共和国中央人民政府今天成立了！中华人名共和国中央人民政府今天成立了！");
-        User user2 = new User("user2", "2", new Province("b"), "hhhhh");
-        User user3 = new User("user3", "3", new Province("c"), "hhhhh");
-        User user4 = new User("user4", "4", new Province("d"), "hhhhh");
-        User user5 = new User("user5", "5", new Province("e"), "hhhhh");
-        User user6 = new User("user6", "6", new Province("f"), "hhhhh");
-
-        User user7 = new User("user7", "1", new Province("a"), "中华人名共和国中央人民政府今天成立了！中华人名共和国中央人民政府今天成立了！");
-        User user8 = new User("user8", "2", new Province("b"), "hhhhh");
-        User user9 = new User("user9", "3", new Province("c"), "hhhhh");
-        User user10 = new User("user10", "4", new Province("d"), "hhhhh");
-        User user11 = new User("user11", "5", new Province("e"), "hhhhh");
-        User user12 = new User("user12", "6", new Province("f"), "hhhhh");
-
-        ObservableList<User> list = FXCollections.observableArrayList(user1, user2, user3, user4, user5, user6,
-                user7, user8, user9, user10, user11, user12, user1, user2, user3, user4, user5, user6);
-//        return list;
         return FXCollections.observableArrayList(userService.getAllUsers());
     }
 
@@ -219,22 +218,7 @@ public class MainController extends BaseController implements Initializable {
         numberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         provinceColumn.setCellValueFactory(new PropertyValueFactory<>("province"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
-
-        timeColumn.setCellFactory((column) -> {
-            TableCell<User, LocalDateTime> cell = new TableCell<User, LocalDateTime>() {
-                @Override
-                public void updateItem(LocalDateTime item, boolean empty) {
-                    super.updateItem(LocalDateTime.now(), empty);
-                    this.setText(null);
-                    this.setGraphic(null);
-
-                    if (!empty) {
-                        this.setText(LocalDateTime.now().toString());
-                    }
-                }
-            };
-            return cell;
-        });
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("localDate"));
 
         deleteColumn.setCellFactory((column) -> {
             TableCell<User, String> cell = new TableCell<User, String>() {
@@ -252,11 +236,11 @@ public class MainController extends BaseController implements Initializable {
 
                             User user = this.getTableView().getItems().get(this.getIndex());
 
-                            table.getItems().remove(user);
+                            if (confirmDelete()) {
+                                table.getItems().remove(user);
+                                userService.deleteUser(user);
+                            }
 
-                            //TODO 删除用户
-
-                            System.out.println("删除 ");
                         });
                     }
                 }

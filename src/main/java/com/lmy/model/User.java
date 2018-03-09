@@ -3,6 +3,8 @@ package com.lmy.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Created by lmy on 2018/2/9.
@@ -22,6 +24,8 @@ public class User {
     private Province province;
 
     private String address;
+
+    private LocalDate localDate;
 
     public User() {
     }

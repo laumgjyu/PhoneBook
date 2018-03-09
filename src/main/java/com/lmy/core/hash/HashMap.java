@@ -1,5 +1,8 @@
 package com.lmy.core.hash;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class HashMap<K, V> {
 
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; //16, 使用二进制操作效率更高
@@ -270,5 +273,21 @@ public class HashMap<K, V> {
             for (int i = 0; i < tab.length; ++i)
                 tab[i] = null;
         }
+    }
+
+    public List<V> getValues() {
+        List<V> values = new LinkedList<>();
+        for (int i = 0; i < table.length; i++) {
+            if (table[i] != null) {
+                Node node = table[i];
+                values.add(table[i].getValue());
+
+                while (node.next != null) {
+                    node = node.next;
+                    values.add((V) node.getValue());
+                }
+            }
+        }
+        return values;
     }
 }
