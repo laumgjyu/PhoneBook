@@ -206,7 +206,16 @@ public final class MainController extends BaseController implements Initializabl
     }
 
     private void conflictWithArray(String searchParam) {
+        String consoleAppend = "用户：%s   " +
+                "线性探测法查找长度：%s \t\n";
 
+        if (checkPhoneNumber(searchParam)) {
+            Node<String, User> node = MemoryCache.getInTableByPhoneNumber(searchParam);
+            consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+        } else {
+            Node<String, User> node = MemoryCache.getInTableByPhoneNumber(searchParam);
+            consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+        }
     }
 
     private void clearInput() {
