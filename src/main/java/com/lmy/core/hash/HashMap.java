@@ -226,7 +226,7 @@ public class HashMap<K, V> {
 
     public V remove(Object key) {
         Node<K, V> e;
-        return (e = removeNode(hash(key), key, null, true)) == null ?
+        return (e = removeNode(hash(key), key, null, false)) == null ?
                 null : e.value;
     }
 

@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Background;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -123,8 +124,6 @@ public final class MainController extends BaseController implements Initializabl
     }
 
     private boolean checkPhoneNumber(String phoneNumber) {
-        System.out.println(phoneNumber);
-
         String pattern = "^1\\d{10}";
         return Pattern.matches(pattern, phoneNumber);
     }
@@ -222,7 +221,7 @@ public final class MainController extends BaseController implements Initializabl
         inputName.setText("");
         inputNumber.setText("");
         inputAddress.setText("");
-        inputProvince.setText("");
+        inputProvince.setText("请选择省份");
         search.setText("");
     }
 

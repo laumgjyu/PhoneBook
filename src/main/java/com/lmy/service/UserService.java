@@ -3,6 +3,7 @@ package com.lmy.service;
 import com.lmy.core.cache.MemoryCache;
 import com.lmy.dao.ProvinceRepository;
 import com.lmy.dao.UserRepository;
+import com.lmy.model.Province;
 import com.lmy.model.User;
 import org.springframework.stereotype.Service;
 
@@ -37,19 +38,15 @@ public class UserService {
     }
 
     public void deleteUser(User user) {
-        if (MemoryCache.containsNameKeyInMap(user))
             MemoryCache.removeByNameInMap(user.getName());
 
-        if (MemoryCache.containsPhoneNumberKeyInMap(user))
             MemoryCache.removeByPhoneNumberInMap(user.getPhoneNumber());
 
-        if (MemoryCache.containsNameKeyInTable(user))
             MemoryCache.removeByNameInTable(user.getName());
 
-        if (MemoryCache.containsPhoneNumberKeyInTable(user))
             MemoryCache.removeByPhoneNumberInTable(user.getPhoneNumber());
 
-        userRepository.delete(user);
+        userRepository.delete(user.getId());
     }
 
     public void addUser(User user) {
