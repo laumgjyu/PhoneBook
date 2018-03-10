@@ -23,7 +23,7 @@ public class UserService {
     private ProvinceRepository provinceRepository;
 
     public List<User> getAllUsers() {
-        List<User> users = null;
+        List<User> users;
         if (MemoryCache.phoneNumberCacheMap.isEmpty() && MemoryCache.nameCacheMap.isEmpty()) {
             users = userRepository.findAll();
             for (User user : users) {
@@ -43,12 +43,18 @@ public class UserService {
         if (MemoryCache.containsPhoneNumberKeyInMap(user))
             MemoryCache.removeByPhoneNumberInMap(user.getPhoneNumber());
 
+        if (MemoryCache.containsNameKeyInTable(user))
+            MemoryCache.removeByNameInTable(user.getName());
+
+        if (MemoryCache.containsPhoneNumberKeyInTable(user))
+            MemoryCache.removeByPhoneNumberInTable(user.getPhoneNumber());
+
         userRepository.delete(user);
     }
 
     public void addUser(User user) {
         MemoryCache.putByPhoneNumber(user);
-//        MemoryCache.putByName(user);
+        MemoryCache.putByName(user);
 
         user.setProvince(provinceRepository.findByName(user.getProvince().getName()));
         user.setLocalDate(LocalDate.now());

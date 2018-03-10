@@ -99,7 +99,6 @@ public final class MainController extends BaseController implements Initializabl
 
     public void initialize(URL location, ResourceBundle resources) {
 
-
         this.showTable(getUsers());
 
         this.addItemsListener();

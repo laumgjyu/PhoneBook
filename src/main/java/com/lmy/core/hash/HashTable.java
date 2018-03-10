@@ -78,7 +78,7 @@ public class HashTable<K, V> {
                     tab[i] = new Node<K, V>(hash, key, value, null);
                     break;
                 }
-                if (i++ >= tab.length) {
+                if (i++ >= tab.length-1) {
                     i = 0;
                 }
             }
@@ -162,7 +162,7 @@ public class HashTable<K, V> {
                     } else {
                         return null;
                     }
-                    if (i++ >= tab.length) {
+                    if (i++ >= tab.length-1) {
                         i = 0;
                     }
                 }
@@ -225,14 +225,23 @@ public class HashTable<K, V> {
             }
 
             int beforeI = i;
-            while (tab[i++] != null) {
+            i++;
+            if (i >= tab.length - 1)
+                i = 0;
 
-                if (tab[i].hash == hash) {
+            while (true) {
+
+                if (tab[i] != null && tab[i].hash == hash) {
                     tab[beforeI] = tab[i];
-                    beforeI++;
+                    beforeI = i;
                     i++;
-                }else
+                } else {
                     break;
+                }
+
+                if (i >= tab.length - 1) {
+                    i = 0;
+                }
             }
 
             tab[beforeI] = null;
