@@ -88,11 +88,14 @@ public class HashMap<K, V> {
                 }
             }
             if (e != null) { // existing mapping for key
-
+                /*   //不允许有重复的key
                 V oldValue = e.value;
                 if (oldValue == null)
                     e.value = value;
                 return oldValue;
+                */
+
+                e.next = new Node<K, V>(hash, key, value, e.next);
             }
         }
         if (++size > threshold)
@@ -192,11 +195,12 @@ public class HashMap<K, V> {
                 return first;
             }
             if ((e = first.next) != null) {
-                e.searchLength = 1;
+                int searchCount = 1;
                 do {
-                    e.searchLength++;
+                    searchCount++;
                     if (e.hash == hash &&
                             ((k = e.key) == key || (key != null && key.equals(k)))) {
+                        e.searchLength = searchCount;
                         return e;
                     }
                 } while ((e = e.next) != null);

@@ -21,6 +21,14 @@ public class Node<K, V> {
         this.searchLength = 0;
     }
 
+    public int getSearchLength() {
+        return searchLength;
+    }
+
+    public void setSearchLength(int searchLength) {
+        this.searchLength = searchLength;
+    }
+
     public Node(int hash, K key, V value) {
         this(hash, key, value, null);
     }

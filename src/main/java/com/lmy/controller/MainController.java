@@ -1,6 +1,8 @@
 package com.lmy.controller;
 
 import com.lmy.config.StartupConfig;
+import com.lmy.core.cache.MemoryCache;
+import com.lmy.core.hash.Node;
 import com.lmy.model.Province;
 import com.lmy.model.User;
 import com.lmy.service.ProvinceService;
@@ -28,7 +30,7 @@ import java.util.regex.Pattern;
  */
 @Controller
 @Log4j
-public class MainController extends BaseController implements Initializable {
+public final class MainController extends BaseController implements Initializable {
 
     @Resource
     private UserService userService;
@@ -113,7 +115,7 @@ public class MainController extends BaseController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR, "请出入正确的参数！");
             alert.show();
             return false;
-        } else if (!checkPhoneNumber()) {
+        } else if (!checkPhoneNumber(inputNumber.getText())) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "电话号码格式不正确！");
             alert.show();
             return false;
@@ -121,8 +123,7 @@ public class MainController extends BaseController implements Initializable {
         return true;
     }
 
-    private boolean checkPhoneNumber() {
-        String phoneNumber = inputNumber.getText();
+    private boolean checkPhoneNumber(String phoneNumber) {
         System.out.println(phoneNumber);
 
         String pattern = "^1\\d{10}";
@@ -130,7 +131,7 @@ public class MainController extends BaseController implements Initializable {
     }
 
     @FXML
-    public void addUser() {
+    public final void addUser() {
 
         if (checkAddParams()) {
             String name = inputName.getText();
@@ -147,7 +148,55 @@ public class MainController extends BaseController implements Initializable {
             success.show();
             clearInput();
         }
+    }
 
+    @FXML
+    public final void search() {
+        String searchParam = search.getText();
+        this.table.getItems().clear();
+
+        if (StringUtils.isBlank(searchParam)) {
+            return;
+        }
+
+        String consoleAppend = "用户：%s   " +
+                "查找长度：%s \t\n";
+        int searchCount = 1;
+        if (checkPhoneNumber(searchParam)) {
+            Node<String, User> node = MemoryCache.getByPhoneNumber(searchParam);
+            if (node != null) {
+                this.table.getItems().add(node.getValue());
+
+                consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+
+                while ((node = node.getNext()) != null) {
+                    searchCount++;
+                    if (searchParam.equalsIgnoreCase(node.getValue().getPhoneNumber())) {
+                        node.setSearchLength(searchCount);
+                        this.table.getItems().add(node.getValue());
+
+                        consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+                    }
+                }
+            }
+        } else {
+            Node<String, User> node = MemoryCache.getByName(searchParam);
+            if (node != null) {
+                this.table.getItems().add(node != null ? node.getValue() : null);
+
+                consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+
+                while ((node = node.getNext()) != null) {
+                    searchCount++;
+                    if (searchParam.equalsIgnoreCase(node.getValue().getName())) {
+                        node.setSearchLength(searchCount);
+                        this.table.getItems().add(node.getValue());
+
+                        consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+                    }
+                }
+            }
+        }
     }
 
     private void clearInput() {
