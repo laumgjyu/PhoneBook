@@ -160,7 +160,7 @@ public final class MainController extends BaseController implements Initializabl
         }
 
         String consoleAppend = "用户：%s   " +
-                "查找长度：%s \t\n";
+                "链地址法查找长度：%s \t\n";
         int searchCount = 1;
         if (checkPhoneNumber(searchParam)) {
             Node<String, User> node = MemoryCache.getByPhoneNumber(searchParam);
@@ -182,7 +182,7 @@ public final class MainController extends BaseController implements Initializabl
         } else {
             Node<String, User> node = MemoryCache.getByName(searchParam);
             if (node != null) {
-                this.table.getItems().add(node != null ? node.getValue() : null);
+                this.table.getItems().add(node.getValue());
 
                 consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
 
@@ -197,6 +197,8 @@ public final class MainController extends BaseController implements Initializabl
                 }
             }
         }
+
+        clearInput();
     }
 
     private void clearInput() {
@@ -204,6 +206,7 @@ public final class MainController extends BaseController implements Initializabl
         inputNumber.setText("");
         inputAddress.setText("");
         inputProvince.setText("");
+        search.setText("");
     }
 
     private void initialSplitMenuButton() {

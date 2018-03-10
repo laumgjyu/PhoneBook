@@ -3,6 +3,9 @@ package com.lmy.core.hash;
 import java.util.LinkedList;
 import java.util.List;
 
+/*
+处理冲突的方法：链地址法
+ */
 public class HashMap<K, V> {
 
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; //16, 使用二进制操作效率更高
@@ -94,7 +97,7 @@ public class HashMap<K, V> {
                     e.value = value;
                 return oldValue;
                 */
-
+                   /* 允许有相同的key*/
                 e.next = new Node<K, V>(hash, key, value, e.next);
             }
         }
