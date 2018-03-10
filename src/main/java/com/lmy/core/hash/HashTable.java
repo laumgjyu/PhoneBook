@@ -138,7 +138,7 @@ public class HashTable<K, V> {
 
     final Node<K, V> getNode(int hash, Object key) {
         Node<K, V>[] tab;
-        Node<K, V> first, e;
+        Node<K, V> first;
         int n, i, searchCount = 0;
         K k;
         if ((tab = table) != null && (n = tab.length) > 0 &&
@@ -152,13 +152,15 @@ public class HashTable<K, V> {
                 searchCount = 1;
                 while (true) {
                     searchCount++;
-                    if (tab[i] != null) {
+
+                    if (tab[i] != null && tab[i].hash != first.hash) {
                         if (tab[i].hash == hash && // always check first node
                                 ((k = tab[i].key) == key || (key != null && key.equals(k)))) {
                             tab[i].searchLength = searchCount;
                             return tab[i];
                         }
-                        break;
+                    } else {
+                        return null;
                     }
                     if (i++ >= tab.length) {
                         i = 0;
