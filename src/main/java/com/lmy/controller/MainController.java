@@ -11,9 +11,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Background;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -150,6 +152,8 @@ public final class MainController extends BaseController implements Initializabl
 
     @FXML
     public final void search() {
+        consoleContent.clear();
+
         String searchParam = search.getText();
         this.table.getItems().clear();
 
@@ -212,7 +216,7 @@ public final class MainController extends BaseController implements Initializabl
             Node<String, User> node = MemoryCache.getInTableByPhoneNumber(searchParam);
             consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
         } else {
-            Node<String, User> node = MemoryCache.getInTableByPhoneNumber(searchParam);
+            Node<String, User> node = MemoryCache.getInTableByName(searchParam);
             consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
         }
     }
@@ -276,6 +280,46 @@ public final class MainController extends BaseController implements Initializabl
         }
     }
 
+    private void modify(User user) {
+        Button complete = new Button("完成");
+        TextField name = new TextField(user.getName());
+        TextField phoneNumber = new TextField(user.getPhoneNumber());
+        TextArea address = new TextArea(user.getAddress());
+        inputProvince.setText(user.getProvince().getName());
+
+        GridPane root = new GridPane();
+        Scene scene = new Scene(root, 320, 480);
+        Stage stage = new Stage();
+
+        stage.setTitle("正在编辑用户：" + user.getName());
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setHeight(380);
+        stage.setWidth(320);
+        stage.setAlwaysOnTop(true);
+
+        root.setHgap(1);
+        root.setVgap(4);
+        root.add(name, 0, 0);
+        root.add(phoneNumber, 0, 1);
+        root.add(inputProvince, 0, 2);
+        root.add(address, 0, 3);
+        root.add(complete, 0, 4);
+
+        complete.setPrefWidth(310);
+
+        complete.setOnMouseClicked((event -> {
+            User user2Save = new User(name.getText(), phoneNumber.getText(), new Province(inputProvince.getText()), address.getText());
+
+            userService.deleteUser(user);
+            userService.addUser(user2Save);
+            table.getItems().setAll(getUsers());
+            stage.close();
+        }));
+
+        stage.show();
+    }
+
     private ObservableList<User> getUsers() {
 
         return FXCollections.observableArrayList(userService.getAllUsers());
@@ -329,12 +373,9 @@ public final class MainController extends BaseController implements Initializabl
                         delBtn.setPrefWidth(100);
                         this.setGraphic(delBtn);
                         delBtn.setOnMouseClicked((me) -> {
-
                             User user = this.getTableView().getItems().get(this.getIndex());
 
-                            //TODO 修改用户
-
-                            System.out.println("修改");
+                            modify(user);
                         });
                     }
                 }
