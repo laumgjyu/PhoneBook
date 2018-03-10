@@ -37,11 +37,11 @@ public class UserService {
     }
 
     public void deleteUser(User user) {
-        if (MemoryCache.containsNameKey(user))
-            MemoryCache.removeByName(user.getName());
+        if (MemoryCache.containsNameKeyInMap(user))
+            MemoryCache.removeByNameInMap(user.getName());
 
-        if (MemoryCache.containsPhoneNumberKey(user))
-            MemoryCache.removeByPhoneNumber(user.getPhoneNumber());
+        if (MemoryCache.containsPhoneNumberKeyInMap(user))
+            MemoryCache.removeByPhoneNumberInMap(user.getPhoneNumber());
 
         userRepository.delete(user);
     }

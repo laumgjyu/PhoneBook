@@ -153,8 +153,8 @@ public class HashTable<K, V> {
                 while (true) {
                     searchCount++;
 
-                    if (tab[i] != null && tab[i].hash != first.hash) {
-                        if (tab[i].hash == hash && // always check first node
+                    if (tab[i] != null) {
+                        if (tab[i].hash == hash &&
                                 ((k = tab[i].key) == key || (key != null && key.equals(k)))) {
                             tab[i].searchLength = searchCount;
                             return tab[i];
@@ -171,5 +171,72 @@ public class HashTable<K, V> {
 
         return null;
     }
-}
 
+    public boolean containsKey(Object key) {
+        return getNode(hash(key), key) != null;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public V remove(Object key) {
+        Node<K, V> e;
+        return (e = removeNode(hash(key), key)) == null ? null : e.value;
+    }
+
+    /**
+     * @param hash
+     * @param key
+     * @return
+     */
+    final Node<K, V> removeNode(int hash, Object key) {
+        Node<K, V>[] tab;
+        Node<K, V> p;  //hash相同第一个位置
+        int n, i;
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+                (p = tab[i = (n - 1) & hash]) != null) {
+            Node<K, V> node = null; // the node to remove
+            K k;
+            if (p.hash == hash &&
+                    ((k = p.key) == key || (key != null && key.equals(k))))
+                node = p; // get i
+            else {
+                i = (n - 1) & hash + 1;
+                while (true) {
+
+                    if (tab[i] != null) {
+                        if (tab[i].hash == hash &&
+                                ((k = tab[i].key) == key || (key != null && key.equals(k)))) {
+                            node = tab[i];  //get i
+                            break;
+                        }
+                    } else {
+                        return null;
+                    }
+                    if (i++ >= tab.length) {
+                        i = 0;
+                    }
+                }
+            }
+
+            int beforeI = i;
+            while (tab[i++] != null) {
+
+                if (tab[i].hash == hash) {
+                    tab[beforeI] = tab[i];
+                    beforeI++;
+                    i++;
+                }else
+                    break;
+            }
+
+            tab[beforeI] = null;
+        }
+        return null;
+    }
+}

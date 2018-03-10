@@ -159,11 +159,18 @@ public final class MainController extends BaseController implements Initializabl
             return;
         }
 
+        conflictWithList(searchParam);
+
+        conflictWithArray(searchParam);
+        clearInput();
+    }
+
+    private void conflictWithList(String searchParam) {
         String consoleAppend = "用户：%s   " +
                 "链地址法查找长度：%s \t\n";
         int searchCount = 1;
         if (checkPhoneNumber(searchParam)) {
-            Node<String, User> node = MemoryCache.getByPhoneNumber(searchParam);
+            Node<String, User> node = MemoryCache.getInMapByPhoneNumber(searchParam);
             if (node != null) {
                 this.table.getItems().add(node.getValue());
 
@@ -180,7 +187,7 @@ public final class MainController extends BaseController implements Initializabl
                 }
             }
         } else {
-            Node<String, User> node = MemoryCache.getByName(searchParam);
+            Node<String, User> node = MemoryCache.getInMapByName(searchParam);
             if (node != null) {
                 this.table.getItems().add(node.getValue());
 
@@ -197,8 +204,10 @@ public final class MainController extends BaseController implements Initializabl
                 }
             }
         }
+    }
 
-        clearInput();
+    private void conflictWithArray(String searchParam) {
+
     }
 
     private void clearInput() {
