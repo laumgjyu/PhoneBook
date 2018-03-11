@@ -313,7 +313,10 @@ public final class MainController extends BaseController implements Initializabl
 
             userService.deleteUser(user);
             userService.addUser(user2Save);
-            table.getItems().setAll(getUsers());
+            if (addTab.isSelected())
+                table.getItems().setAll(getUsers());
+            else
+                table.getItems().setAll(FXCollections.observableArrayList(user2Save));
             stage.close();
         }));
 
