@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 /**
@@ -35,6 +37,7 @@ import java.util.regex.Pattern;
 @Log4j
 public final class MainController extends BaseController implements Initializable {
 
+    ExecutorService executorService = Executors.newFixedThreadPool(2);
     @Resource
     private UserService userService;
 
@@ -214,10 +217,12 @@ public final class MainController extends BaseController implements Initializabl
 
         if (checkPhoneNumber(searchParam)) {
             Node<String, User> node = MemoryCache.getInTableByPhoneNumber(searchParam);
-            consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+            if (node != null)
+                consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
         } else {
             Node<String, User> node = MemoryCache.getInTableByName(searchParam);
-            consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
+            if (node != null)
+                consoleContent.appendText(String.format(consoleAppend, node.getValue().getName(), node.getSearchLength()));
         }
     }
 

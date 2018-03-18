@@ -207,7 +207,12 @@ public class HashTable<K, V> {
                 node = p; // get i
             else {
                 i = (n - 1) & hash + 1;
+
                 while (true) {
+
+                    if (i++ >= tab.length) {
+                        i = 0;
+                    }
 
                     if (tab[i] != null) {
                         if (tab[i].hash == hash &&

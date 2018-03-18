@@ -106,21 +106,25 @@ public class HashMap<K, V> {
         return null;
     }
 
+    /**
+     * 对数组的容量进行调整，如果数组为空，就对其初始化，如果数组到达了限度，就对数组扩容，并对其中的数据的位置进行重新分配
+     * @return
+     */
     final Node<K, V>[] resize() {
         Node<K, V>[] oldTab = table;
         int oldCap = (oldTab == null) ? 0 : oldTab.length;
         int oldThr = threshold;
         int newCap, newThr = 0;
-        if (oldCap > 0) {
+        if (oldCap > 0) { //首先看这个表是否已经存有数据，如果已经存有数据直接对其进行扩容，将其容量扩大为二倍
             if (oldCap >= MAXIMUM_CAPACITY) {
                 threshold = Integer.MAX_VALUE;
                 return oldTab;
             } else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
                     oldCap >= DEFAULT_INITIAL_CAPACITY)
                 newThr = oldThr << 1; // double threshold
-        } else if (oldThr > 0) // initial capacity was placed in threshold
+        } else if (oldThr > 0) // 这个表还没有被初始化，也就是里面没有数据，但是在构造方法里给他指定了大小
             newCap = oldThr;
-        else {               // zero initial threshold signifies using defaults
+        else {               // 表中没有数据，并且构造方法没有传值，将使用默认值初始化数组
             newCap = DEFAULT_INITIAL_CAPACITY;
             newThr = (int) (DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
         }
@@ -130,6 +134,11 @@ public class HashMap<K, V> {
                     (int) ft : Integer.MAX_VALUE);
         }
         threshold = newThr;
+
+        /*
+        下面是将老的数据扩容之后重新分配到新数组中
+         */
+
         @SuppressWarnings({"rawtypes", "unchecked"})
         Node<K, V>[] newTab = (Node<K, V>[]) new Node[newCap];
         table = newTab;
