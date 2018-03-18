@@ -210,7 +210,7 @@ public class HashTable<K, V> {
 
                 while (true) {
 
-                    if (i++ >= tab.length) {
+                    if (i++ >= tab.length-1) {
                         i = 0;
                     }
 
@@ -223,7 +223,7 @@ public class HashTable<K, V> {
                     } else {
                         return null;
                     }
-                    if (i++ >= tab.length) {
+                    if (i++ >= tab.length-1) {
                         i = 0;
                     }
                 }

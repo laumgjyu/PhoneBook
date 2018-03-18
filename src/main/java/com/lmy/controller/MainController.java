@@ -290,7 +290,21 @@ public final class MainController extends BaseController implements Initializabl
         TextField name = new TextField(user.getName());
         TextField phoneNumber = new TextField(user.getPhoneNumber());
         TextArea address = new TextArea(user.getAddress());
-        inputProvince.setText(user.getProvince().getName());
+        SplitMenuButton modifyProvince = new SplitMenuButton();
+
+        {
+            modifyProvince.getItems().clear();
+            List<Province> provinces = provinceService.getAllProvince();
+
+            for (Province province : provinces) {
+
+                MenuItem item = new MenuItem();
+                item.setText(province.getName());
+                item.setOnAction((event -> modifyProvince.setText(item.getText())));
+                modifyProvince.getItems().add(item);
+            }
+        }
+        modifyProvince.setText(user.getProvince().getName());
 
         GridPane root = new GridPane();
         Scene scene = new Scene(root, 320, 480);
@@ -307,14 +321,14 @@ public final class MainController extends BaseController implements Initializabl
         root.setVgap(4);
         root.add(name, 0, 0);
         root.add(phoneNumber, 0, 1);
-        root.add(inputProvince, 0, 2);
+        root.add(modifyProvince, 0, 2);
         root.add(address, 0, 3);
         root.add(complete, 0, 4);
 
         complete.setPrefWidth(310);
 
         complete.setOnMouseClicked((event -> {
-            User user2Save = new User(name.getText(), phoneNumber.getText(), new Province(inputProvince.getText()), address.getText());
+            User user2Save = new User(name.getText(), phoneNumber.getText(), new Province(modifyProvince.getText()), address.getText());
 
             userService.deleteUser(user);
             userService.addUser(user2Save);
@@ -322,7 +336,8 @@ public final class MainController extends BaseController implements Initializabl
                 table.getItems().setAll(getUsers());
             else
                 table.getItems().setAll(FXCollections.observableArrayList(user2Save));
-            stage.close();
+            stage.hide();
+
         }));
 
         stage.show();
